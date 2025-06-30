@@ -12,7 +12,7 @@ services:
       - ./Accommodation-App-backend/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./Accommodation-App-backend/views.sql:/docker-entrypoint-initdb.d/views.sql
     ports:
-      - "5433:5432"
+      - "5434:5432"
 
   backend:
     build: ./Accommodation-App-backend
