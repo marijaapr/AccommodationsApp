@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:17.4
+    restart: always
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - accommodation_db_data:/var/lib/postgresql/data
+      - ./Accommodation-App-backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./Accommodation-App-backend/views.sql:/docker-entrypoint-initdb.d/views.sql
+    ports:
+      - "5433:5432"
+
+  backend:
+    build: ./Accommodation-App-backend
+    ports:
+      - "9090:9090"
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      - db
+
+  frontend:
+    build: ./accommodation-app-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  accommodation_db_data:
